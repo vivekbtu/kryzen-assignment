@@ -36,8 +36,12 @@ const Login = () => {
         }));
     };
 
+    let userUID = localStorage.getItem('userUID');
+
+    // console.log("log", userUID)
+
     if (auth.isAuth) {
-        navigate("/product-page")
+        navigate(`/${userUID}/product-page`)
     }
 
     return (

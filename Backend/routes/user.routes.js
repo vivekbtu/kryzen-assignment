@@ -9,7 +9,7 @@ dotenv.config();
 // user/signup
 userRouter.post("/signup", async (req, res) => {
     console.log(req.body);
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
     console.log("signBody", req.body);
     
     try {
@@ -20,7 +20,7 @@ userRouter.post("/signup", async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 4);
-        const user = await UserModel.create({ email, password: hashedPassword });
+        const user = await UserModel.create({ email, password: hashedPassword, username });
         res.send("Sign up successful");
     } catch (err) {
         console.log(err);
@@ -45,10 +45,11 @@ userRouter.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-        const token = jwt.sign({ userID: user.id }, process.env.KEY);
+        const token = jwt.sign({ userID: user.id }, process.env.KEY, { expiresIn: "1h" });
         // const refresh_token = jwt.sign({ email: email }, process.env.REFRESH_KEY, { expiresIn: "28d" });
 
-        res.json({ msg: "Login successful", token });
+        const userUID = user.id;
+        res.json({ msg: "Login successful", token, userUID });
     } catch (err) {
         console.log(err);
         res.status(500).send("Something went wrong in Login, please try again later");

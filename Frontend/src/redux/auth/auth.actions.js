@@ -22,12 +22,13 @@ try {
    
     Swal.fire({
         icon: 'success',
-        title:data.message
+        title:data.msg
       })
       return dispatch({
         type: LOGIN,
         payload: data.token,
-        token: localStorage.setItem("userToken",data.token)
+        token: localStorage.setItem("userToken",data.token),
+        userUID: localStorage.setItem("userUID", data.userUID)
     });
 }
 catch ({ response: { data: { message } } }) {
